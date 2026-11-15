@@ -1,0 +1,18 @@
+---
+import ProfileIdentity from '../../components/ProfileIdentity.astro';
+import ProfileLinks from '../../components/ProfileLinks.astro';
+import ServicesCarousel from '../../components/ServicesCarousel.astro';
+import type { ShapehubTheme } from '../../data/shapehub';
+interface Props { theme: ShapehubTheme; }
+const { theme } = Astro.props;
+---
+<div class="grid gap-8">
+  <ProfileIdentity theme={theme} />
+  <ServicesCarousel />
+  <ProfileLinks theme={theme} />
+  <section class="rounded-[var(--panel-radius)] border border-surface-border px-4 py-6 [background:var(--surface-background)] shadow-[var(--control-shadow)]" aria-labelledby="estimate-title">
+    <h2 class="text-trim text-xl leading-normal font-semibold text-[var(--heading-color)]" id="estimate-title">Get a free estimate</h2>
+    <p class="text-trim mt-6 max-w-[321px] text-[15px]">Fill out the form below and we’ll get back to you soon</p>
+    <!-- The external estimate widget will be integrated here when provided. -->
+  </section>
+</div>

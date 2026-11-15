@@ -1,0 +1,75 @@
+---
+import ProfileIdentity from '../../components/ProfileIdentity.astro';
+import ProfileLinks from '../../components/ProfileLinks.astro';
+import QrDialog from '../../components/QrDialog.astro';
+import { connectCards } from '../../data/connect';
+import type { ShapehubTheme } from '../../data/shapehub';
+
+interface Props { theme: ShapehubTheme; }
+const { theme } = Astro.props;
+---
+
+<div class="grid gap-8" data-connect>
+  <ProfileIdentity theme={theme} />
+  <ProfileLinks theme={theme} />
+
+  <section aria-labelledby="connect-heading" class="grid gap-3">
+    <h2 id="connect-heading" class="flex items-center justify-center gap-2 text-base font-semibold text-[var(--heading-color)]">
+      <img src={`/icons/${theme}/qr-heading.svg`} width="24" height="24" alt="" />
+      Give me a review
+    </h2>
+    <div class="grid grid-cols-2 gap-2">
+      {connectCards.map((card, index) => (
+        <button
+          type="button"
+          aria-haspopup="dialog"
+          aria-controls={`qr-dialog-${card.id}`}
+          aria-label={`Show ${card.id} QR code`}
+          data-open-dialog={`qr-dialog-${card.id}`}
+          class:list={[
+            'flex min-h-[243px] min-w-0 flex-col items-center justify-between gap-3 rounded-[var(--connect-card-radius)] border border-[var(--connect-card-border)] px-4 py-6 text-center shadow-[var(--connect-card-shadow)]',
+            index === 0
+              ? 'text-[var(--connect-primary-ink)] [background:var(--connect-primary-background)]'
+              : 'text-[var(--connect-secondary-ink)] [background:var(--connect-secondary-background)]',
+          ]}
+        >
+          <img src={`/icons/${theme}/qr-card.svg`} width="80" height="80" alt="" />
+          <span class="grid gap-[var(--connect-text-gap)]">
+            <span class="text-trim text-xs font-semibold">{card.label}</span>
+            <span class="text-trim text-base font-semibold">{card.title}</span>
+            <span class="text-trim text-[15px] leading-[1.3]">{card.description}</span>
+          </span>
+        </button>
+      ))}
+    </div>
+  </section>
+  {connectCards.map((card) => <QrDialog card={card} theme={theme} />)}
+</div>
+
+<script>
+  for (const connect of document.querySelectorAll<HTMLElement>('[data-connect]')) {
+    const triggers = connect.querySelectorAll<HTMLButtonElement>('[data-open-dialog]');
+    for (const trigger of triggers) {
+      const target = trigger.dataset.openDialog;
+      const dialog = target ? document.getElementById(target) : null;
+      if (!(dialog instanceof HTMLDialogElement)) continue;
+
+      let previousOverflow = '';
+      trigger.addEventListener('click', () => {
+        previousOverflow = document.body.style.overflow;
+        dialog.showModal();
+        document.body.style.overflow = 'hidden';
+      });
+      dialog.querySelector<HTMLButtonElement>('[data-close-dialog]')?.addEventListener('click', () => dialog.close());
+      dialog.addEventListener('click', (event) => {
+        if (event.target !== dialog) return;
+        const rect = dialog.getBoundingClientRect();
+        if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close();
+      });
+      dialog.addEventListener('close', () => {
+        document.body.style.overflow = previousOverflow;
+        trigger.focus();
+      });
+    }
+  }
+</script>

@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+/* Inline aliases keep each utility bound to the active runtime theme. */
+@theme inline {
+  --font-sans: "Poppins", sans-serif;
+  --color-page: var(--page-background);
+  --color-ink: var(--text-color);
+  --color-social-ink: var(--social-text);
+  --color-social-icon: var(--social-icon-background);
+  --color-primary-action-ink: var(--action-primary-text);
+  --color-secondary-action-ink: var(--action-secondary-text);
+  --color-surface-border: var(--surface-border);
+  --color-service-surface: var(--service-background);
+}
+
+/* Figma trims the cap-height of compact labels; line-height stays readable. */
+@utility text-trim {
+  text-box-trim: trim-both;
+  text-box-edge: cap alphabetic;
+}
+
+:root { font-synthesis: none; text-rendering: optimizeLegibility; }
+html, body { min-width: 0; min-height: 100%; }
+body { background-image: var(--page-background-image, none); }
+:focus-visible { outline: 3px solid #084e17; outline-offset: 3px; }

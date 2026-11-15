@@ -1,0 +1,29 @@
+---
+import '../styles/global.css';
+import '../styles/themes.css';
+import { existsSync } from 'node:fs';
+import { resolve } from 'node:path';
+
+interface Props {
+  theme: 'shapehub-1' | 'shapehub-2';
+  title?: string;
+}
+const { theme, title = 'Simon Tree Services | Orlando, Florida' } = Astro.props;
+const hasBackground = theme === 'shapehub-2' && existsSync(resolve(process.cwd(), 'public/images/shapehub-2/tree-canopy.webp'));
+---
+
+<!doctype html>
+<html lang="en" data-theme={theme}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Professional tree services you can trust in Orlando, Florida." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+    <title>{title}</title>
+  </head>
+  <body class="min-h-screen bg-page bg-cover bg-top bg-no-repeat bg-fixed font-sans text-base leading-normal text-ink" style={hasBackground ? "--page-background-image: url('/images/shapehub-2/tree-canopy.webp')" : undefined}>
+    <main class="mx-auto w-full px-4 py-8 md:w-[500px] md:px-0"><slot /></main>
+  </body>
+</html>
