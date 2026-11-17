@@ -1,6 +1,7 @@
 ---
 import { profile, type ShapehubTheme } from '../../data/shapehub';
 import { googleReviewUrl } from '../../data/review';
+import ReviewInteractions from '../../components/ReviewInteractions.astro';
 
 interface Props { theme: ShapehubTheme; }
 const { theme } = Astro.props;
@@ -9,18 +10,20 @@ const starShapes = [1, 2, 3, 3, 1];
 const actionClass = 'flex min-h-14 items-center gap-2 rounded-[var(--action-radius)] border border-[var(--control-border)] px-4 py-2 text-[15px] font-semibold text-primary-action-ink no-underline shadow-[var(--control-shadow)] [background:var(--action-primary)]';
 ---
 
-<article data-review class="grid gap-8 rounded-[var(--review-panel-radius)] border border-[var(--review-panel-border)] px-[var(--review-panel-inline-padding)] py-6 text-[#034812] shadow-[var(--review-panel-shadow)] [background:var(--review-panel-background)]">
+<article data-review class="rounded-[var(--review-panel-radius)] border border-[var(--review-panel-border)] px-[var(--review-panel-inline-padding)] py-6 text-[#034812] shadow-[var(--review-panel-shadow)] [background:var(--review-panel-background)]">
   <div class="flex items-center justify-between gap-2 text-sm">
     <p class="flex items-center gap-2"><img src={icon('google')} width="16" height="16" alt="" />Google Reviews</p>
     <p class="flex items-center gap-1"><img src={icon('score')} width="12" height="11" alt="" /><span>5.0</span></p>
   </div>
 
-  <div class="mx-auto grid h-[61px] w-40 place-items-center">
+  <div class="mx-auto mt-[53px] grid h-[61px] w-40 place-items-center">
     {profile.logo && <img class="h-full w-full object-contain" src={profile.logo.src} width={profile.logo.width} height={profile.logo.height} alt="Simon Tree Services" />}
   </div>
 
-  <div class="grid justify-items-center gap-4 text-center">
+  <div class="mt-[53px] grid justify-items-center text-center">
     <h1 class="max-w-[260px] text-2xl leading-[1.2] font-semibold">How would you rate our service?</h1>
+  </div>
+  <div class="mt-[53px] grid justify-items-center gap-4 text-center">
     <p class="text-[15px] leading-normal">Your opinion helps keep our neighborhood safe, trimmed, and green.</p>
     <fieldset class="flex flex-wrap items-center justify-center gap-6">
       <legend class="sr-only">How would you rate our service?</legend>
@@ -36,12 +39,12 @@ const actionClass = 'flex min-h-14 items-center gap-2 rounded-[var(--action-radi
     </fieldset>
   </div>
 
-  <div data-five-star-content class="grid gap-8" hidden>
+  <div data-five-star-content class="mt-4 grid" hidden>
     <p class="flex items-center justify-center gap-2 rounded-[18px] border border-[#034812] px-4 py-2 text-center text-xs font-semibold uppercase">
       <img src={icon('excellent')} width="16" height="16" alt="" />5.0 Excellent / Outstanding Experience
     </p>
 
-    <div class="grid gap-4">
+    <div class="mt-[53px] grid gap-4">
       <div class="flex flex-wrap items-center justify-between gap-3">
         <p class="max-w-[200px] text-[15px]">Your review (we will optionally copy this):</p>
         <button data-copy-review type="button" class="flex min-h-14 items-center gap-2 rounded-lg bg-[#a5d33d] px-4 font-semibold text-[#034812]">
@@ -51,61 +54,15 @@ const actionClass = 'flex min-h-14 items-center gap-2 rounded-[var(--action-radi
       <p data-review-text tabindex="-1" class="rounded-lg border border-[#b2b7bb] bg-[#f5f5f5] px-4 py-6 text-[13px] leading-normal"></p>
       <p data-copy-status class="text-sm" role="status" aria-live="polite"></p>
     </div>
-
-    {googleReviewUrl ? <a class={actionClass} href={googleReviewUrl}>
+    {
+      /* */
+    }
+    {googleReviewUrl ? <a class:list={[actionClass, 'mt-4']} href={googleReviewUrl}>
       <img src={icon('google-action')} width="33" height="33" alt="" /><span>Continue to Google Review</span><img class="ml-auto" src={icon('arrow')} alt="" />
-    </a> : <span class={actionClass} role="link" aria-disabled="true">
+    </a> : <span class:list={[actionClass, 'mt-4']} role="link" aria-disabled="true">
       <img src={icon('google-action')} width="33" height="33" alt="" /><span>Continue to Google Review</span><img class="ml-auto" src={icon('arrow')} alt="" />
     </span>}
   </div>
 </article>
 
-<script>
-  import { reviewTexts } from '../../data/review';
-
-  for (const review of document.querySelectorAll<HTMLElement>('[data-review]')) {
-    const ratings = review.querySelectorAll<HTMLInputElement>('input[name="rating"]');
-    const stars = review.querySelectorAll<HTMLImageElement>('[data-rating-star]');
-    const content = review.querySelector<HTMLElement>('[data-five-star-content]');
-    const text = review.querySelector<HTMLElement>('[data-review-text]');
-    const copyButton = review.querySelector<HTMLButtonElement>('[data-copy-review]');
-    const status = review.querySelector<HTMLElement>('[data-copy-status]');
-    if (!content || !text || !copyButton || !status) continue;
-
-    let selectedText: string | undefined;
-    for (const rating of ratings) {
-      rating.addEventListener('change', () => {
-        const value = Number(rating.value);
-        stars.forEach((star, index) => {
-          const src = index < value ? star.dataset.filledSrc : star.dataset.outlineSrc;
-          if (src) star.src = src;
-        });
-        content.hidden = value !== 5;
-        status.textContent = '';
-        if (value === 5) {
-          selectedText ??= reviewTexts[Math.floor(Math.random() * reviewTexts.length)];
-          text.textContent = selectedText ?? '';
-        }
-      });
-    }
-
-    copyButton.addEventListener('click', async () => {
-      const value = text.textContent;
-      if (!value) return;
-      try {
-        if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
-        await navigator.clipboard.writeText(value);
-        status.textContent = 'Text copied.';
-      } catch {
-        const selection = window.getSelection();
-        if (selection) {
-          const range = document.createRange();
-          range.selectNodeContents(text);
-          selection.removeAllRanges();
-          selection.addRange(range);
-        }
-        status.textContent = 'Copy unavailable. Select the text above and copy it manually.';
-      }
-    });
-  }
-</script>
+<ReviewInteractions />

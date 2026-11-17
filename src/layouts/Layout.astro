@@ -3,12 +3,14 @@ import '../styles/global.css';
 import '../styles/themes.css';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
+import type { ShapehubTheme } from '../data/shapehub';
 
 interface Props {
-  theme: 'shapehub-1' | 'shapehub-2';
+  theme: ShapehubTheme;
   title?: string;
+  fullBleed?: boolean;
 }
-const { theme, title = 'Simon Tree Services | Orlando, Florida' } = Astro.props;
+const { theme, title = 'Simon Tree Services | Atlanta, Georgia', fullBleed = false } = Astro.props;
 const hasBackground = theme === 'shapehub-2' && existsSync(resolve(process.cwd(), 'public/images/shapehub-2/tree-canopy.webp'));
 ---
 
@@ -17,13 +19,20 @@ const hasBackground = theme === 'shapehub-2' && existsSync(resolve(process.cwd()
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content="Professional tree services you can trust in Orlando, Florida." />
+    <meta name="description" content="Professional tree services you can trust in Atlanta, Georgia." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://link.inkshapecrm.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet" />
     <title>{title}</title>
   </head>
   <body class="min-h-screen bg-page bg-cover bg-top bg-no-repeat bg-fixed font-sans text-base leading-normal text-ink" style={hasBackground ? "--page-background-image: url('/images/shapehub-2/tree-canopy.webp')" : undefined}>
-    <main class="mx-auto w-full px-4 py-8 md:w-[500px] md:px-0"><slot /></main>
+    <main class:list={['mx-auto w-full py-8 md:w-[500px] md:px-0', !fullBleed && (theme === 'shapehub' ? 'business-main' : 'px-4')]}><slot /></main>
   </body>
 </html>
+
+<style>
+  @media (max-width: 767px) {
+    .business-main { --business-inset: max(16px, calc(24px - (100vw - 100%) / 2)); padding-inline: var(--business-inset); }
+  }
+</style>

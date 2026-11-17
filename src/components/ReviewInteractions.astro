@@ -1,0 +1,55 @@
+<script>
+  import { reviewTexts } from '../data/review';
+
+  for (const review of document.querySelectorAll<HTMLElement>('[data-review]')) {
+    const ratings = review.querySelectorAll<HTMLInputElement>('input[name="rating"]');
+    const stars = review.querySelectorAll<HTMLImageElement>('[data-rating-star]');
+    const content = review.querySelector<HTMLElement>('[data-five-star-content]');
+    const feedback = review.querySelector<HTMLElement>('[data-feedback-widget]');
+    const scoreLabel = review.querySelector<HTMLElement>('[data-rating-score]');
+    const googleMinRating = Number(review.dataset.googleMinRating ?? 5);
+    const text = review.querySelector<HTMLElement>('[data-review-text]');
+    const copyButton = review.querySelector<HTMLButtonElement>('[data-copy-review]');
+    const status = review.querySelector<HTMLElement>('[data-copy-status]');
+    if (!content || !text || !copyButton || !status) continue;
+
+    let selectedText: string | undefined;
+    for (const rating of ratings) {
+      rating.addEventListener('change', () => {
+        const value = Number(rating.value);
+        stars.forEach((star, index) => {
+          const src = index < value ? star.dataset.filledSrc : star.dataset.outlineSrc;
+          if (src) star.src = src;
+        });
+        const showGoogle = value >= googleMinRating;
+        content.hidden = !showGoogle;
+        if (feedback) feedback.hidden = value < 1 || showGoogle;
+        status.textContent = '';
+        if (showGoogle) {
+          if (scoreLabel) scoreLabel.textContent = value === 5 ? '5.0 Excellent / Outstanding Experience' : `${value}.0`;
+          selectedText ??= reviewTexts[Math.floor(Math.random() * reviewTexts.length)];
+          text.textContent = selectedText ?? '';
+        }
+      });
+    }
+
+    copyButton.addEventListener('click', async () => {
+      const value = text.textContent;
+      if (!value) return;
+      try {
+        if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
+        await navigator.clipboard.writeText(value);
+        status.textContent = 'Text copied.';
+      } catch {
+        const selection = window.getSelection();
+        if (selection) {
+          const range = document.createRange();
+          range.selectNodeContents(text);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        }
+        status.textContent = 'Copy unavailable. Select the text above and copy it manually.';
+      }
+    });
+  }
+</script>

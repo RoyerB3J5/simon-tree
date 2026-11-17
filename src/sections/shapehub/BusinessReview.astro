@@ -1,0 +1,64 @@
+---
+import ProfileIdentity from '../../components/ProfileIdentity.astro';
+import ReviewInteractions from '../../components/ReviewInteractions.astro';
+import FormReview from '../../components/FormReview.astro';
+import { googleReviewUrl } from '../../data/review';
+
+const icon = (name: string) => `/icons/shapehub-1/review-${name}.svg`;
+const starShapes = [1, 2, 3, 3, 1];
+const actionClass = 'mt-4 flex min-h-14 items-center gap-2 rounded-xl px-4 py-2 text-[15px] font-semibold text-primary-action-ink no-underline shadow-[var(--control-shadow)] [background:var(--action-primary)]';
+---
+<article data-review data-google-min-rating="4" class="rounded-2xl bg-white px-4 py-4 text-[#022b02]">
+  <div class="flex items-center justify-between gap-2 text-sm">
+    <p class="flex items-center gap-2"><img src={icon('google')} width="16" height="16" alt="" />Google Reviews</p>
+    <p class="flex items-center gap-1"><img src={icon('score')} width="12" height="11" alt="" /><span>5.0</span></p>
+  </div>
+
+  <div class="mt-6"><ProfileIdentity theme="shapehub" /></div>
+  <hr class="mt-3 border-0 border-t border-[#022b02]/10" />
+
+  <div class="mt-6 grid justify-items-center gap-4 text-center">
+    <h1 class="text-2xl leading-[1.2] font-bold" style="max-width: 260px">How would you rate our service?</h1>
+    <p class="text-sm leading-[1.5]">Your opinion helps keep our neighborhood safe, trimmed, and green.</p>
+    <fieldset class="business-rating flex max-w-full items-center justify-center">
+      <legend class="sr-only">How would you rate our service?</legend>
+      {starShapes.map((shape, index) => {
+        const value = index + 1;
+        const outline = icon(`star-${shape}-outline`);
+        const filled = icon(`star-${shape}`);
+        return <label class="flex shrink-0 cursor-pointer items-center justify-center rounded-sm">
+          <input class="sr-only" type="radio" name="rating" value={value} aria-label={`${value} ${value === 1 ? 'star' : 'stars'}`} />
+          <img data-rating-star data-filled-src={filled} data-outline-src={outline} src={outline} width="26" height="24" alt="" />
+        </label>;
+      })}
+    </fieldset>
+  </div>
+
+  <div data-five-star-content class="mt-5 grid" hidden>
+    <p class="flex items-center justify-center gap-2 rounded-[18px] border border-[#034812] px-2 py-2 text-center text-xs font-semibold uppercase">
+      <img src={icon('excellent')} width="16" height="16" alt="" /><span data-rating-score>5.0 Excellent / Outstanding Experience</span>
+    </p>
+    <div class="mt-6 grid gap-4">
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        <p class="flex-1 text-sm leading-[1.5]" style="min-width: 160px">Your review (we will optionally copy this):</p>
+        <button data-copy-review type="button" class="min-h-14 shrink-0 rounded-xl bg-[#a5d33d] px-6 font-semibold shadow-[var(--control-shadow)]">Copy text</button>
+      </div>
+      <p data-review-text tabindex="-1" class="rounded-xl border border-[#b2b7bb] bg-[#f5f5f5] px-4 py-6 text-sm leading-[1.5]"></p>
+      <p data-copy-status class="text-sm empty:hidden" role="status" aria-live="polite"></p>
+    </div>
+    {googleReviewUrl ? <a class={actionClass} href={googleReviewUrl} hidden>
+      <img src={icon('google-action')} width="33" height="33" alt="" /><span>Continue to Google Review</span><img class="ml-auto" src={icon('arrow')} alt="" />
+    </a> : <span class={actionClass} role="link" aria-disabled="true" hidden>
+      <img src={icon('google-action')} width="33" height="33" alt="" /><span>Continue to Google Review</span><img class="ml-auto" src={icon('arrow')} alt="" />
+    </span>}
+  </div>
+  <div data-feedback-widget class="mt-6" hidden><FormReview /></div>
+</article>
+<ReviewInteractions />
+
+<style>
+  .business-rating { gap: 24px; }
+  .business-rating label { position: relative; width: 26px; height: 24px; }
+  .business-rating label::before { content: ''; position: absolute; inset: -10px -11px; }
+  .business-rating label:has(input:focus-visible) { outline: 2px solid #084e17; outline-offset: 2px; }
+</style>

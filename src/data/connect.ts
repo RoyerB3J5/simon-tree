@@ -9,7 +9,6 @@ export type ConnectCard = {
   image: ImageAsset | null;
 };
 
-// The QR images are added after the originals are supplied and measured.
 export const connectCards: ConnectCard[] = [
   {
     id: 'info',
@@ -17,7 +16,7 @@ export const connectCards: ConnectCard[] = [
     title: 'Give me a review',
     description: 'Scan to view our profile, social media, and contact info.',
     modalTitle: 'Scan me for info',
-    image: null,
+    image: { src: '/images/shared/qr/info.png', width: 917, height: 917 },
   },
   {
     id: 'feedback',
@@ -25,6 +24,6 @@ export const connectCards: ConnectCard[] = [
     title: 'Give me a review',
     description: 'Scan to leave a review and share your experience.',
     modalTitle: 'Scan me for feedback',
-    image: null,
+    image: { src: '/images/shared/qr/feedback.png', width: 917, height: 917 },
   },
 ];

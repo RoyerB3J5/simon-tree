@@ -1,0 +1,34 @@
+---
+import ProfileIdentity from '../../components/ProfileIdentity.astro';
+import ContactAction from '../../components/ContactAction.astro';
+import SocialLinks from '../../components/SocialLinks.astro';
+import ServicesCarousel from '../../components/ServicesCarousel.astro';
+import EstimateWidget from '../../components/EstimateWidget.astro';
+import SectionLabel from '../../components/SectionLabel.astro';
+const theme = 'shapehub';
+---
+<div class="grid gap-8">
+  <div class="bio-inset"><ProfileIdentity theme={theme} /></div>
+  <hr class="bio-inset border-0 border-t border-[#022b02]/10" />
+
+  <section class="bio-inset grid gap-5 text-center" aria-labelledby="welcome-heading">
+    <div class="grid gap-3">
+      <h1 id="welcome-heading" class="text-trim text-2xl leading-tight font-bold">Welcome</h1>
+      <p class="mx-auto text-sm leading-[1.5]" style="max-width: 300px">Find all our information here and stay connected with us.</p>
+    </div>
+    <ContactAction theme={theme} />
+  </section>
+
+  <ServicesCarousel variant="business" />
+
+  <section class="bio-inset grid gap-5" aria-labelledby="bio-links-heading">
+    <SectionLabel id="bio-links-heading">Connect With Us</SectionLabel>
+    <SocialLinks theme={theme} />
+  </section>
+
+  <div class="bio-inset"><EstimateWidget variant="business" /></div>
+</div>
+
+<style>
+  .bio-inset { margin-inline: 24px; }
+</style>

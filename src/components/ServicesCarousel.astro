@@ -1,51 +1,40 @@
 ---
 import { services } from '../data/shapehub';
+interface Props { variant?: 'default' | 'business'; }
+const { variant = 'default' } = Astro.props;
 ---
 <section class="min-w-0" aria-label="Our services" data-services-carousel>
-  <div class="carousel-window -mr-4 overflow-x-auto md:mr-0" role="region" tabindex="0" aria-label="Tree services">
+  <div class="carousel-window overflow-x-auto" role="region" tabindex="0" aria-label="Tree services">
     <div class="carousel-track flex w-max">
       {[false, true].map((duplicate) => (
         <ul class="carousel-group flex flex-none list-none gap-2 pr-2" aria-hidden={duplicate ? 'true' : undefined}>
           {services.map((service) => (
-            <li class:list={['flex w-[250px] shrink-0 flex-col gap-[19px] overflow-hidden rounded-lg px-2 pt-2 pb-4 text-center', service.title === 'Full Tree Service' || service.title === 'Brush Cutting' ? 'bg-white' : '[background:var(--service-background)]']}>
+            <li class:list={['flex shrink-0 flex-col gap-[19px] overflow-hidden rounded-lg px-2 pt-2 pb-4 text-center', variant === 'business' ? 'w-[218px] border border-[#dbe2dc] bg-white' : 'w-[250px]', variant !== 'business' && (service.title === 'Full Tree Service' || service.title === 'Brush Cutting' ? 'bg-white' : '[background:var(--service-background)]')]}>
               <div class="aspect-[5/4] w-full overflow-hidden rounded-lg">
-                {service.image && <img class="block h-full w-full object-cover" src={service.image.src} alt="" width={service.image.width} height={service.image.height} loading="lazy" decoding="async" />}
+                {service.image && <img class="block h-full w-full object-cover" src={service.image.src} alt="" width={service.image.width} height={service.image.height} loading="eager" decoding="async" />}
               </div>
-              <p class="text-trim text-base leading-normal font-semibold text-ink uppercase">{service.title}</p>
+              <p class:list={['text-trim leading-normal font-semibold text-ink', variant === 'business' ? 'text-xs' : 'text-base uppercase']}>{variant === 'business' && service.title === 'Full Tree Service' ? 'Full Tree Services' : service.title}</p>
             </li>
           ))}
         </ul>
       ))}
     </div>
   </div>
-  {/* */}
-  <button type="button" class="carousel-toggle mt-2 ml-auto  cursor-pointer bg-transparent p-0 text-xs underline hidden" hidden>Pause services</button>
 </section>
 
 <script>
   for (const carousel of document.querySelectorAll<HTMLElement>('[data-services-carousel]')) {
-    const button = carousel.querySelector<HTMLButtonElement>('.carousel-toggle');
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    if (!button) continue;
-    carousel.classList.add('is-enhanced');
-    const updateVisibility = () => { button.hidden = reducedMotion.matches; };
-    updateVisibility();
-    reducedMotion.addEventListener('change', updateVisibility);
-    button.addEventListener('click', () => {
-      const paused = carousel.classList.contains('is-paused');
-      button.textContent = paused ? 'Pause services' : 'Resume services';
-      carousel.classList.toggle('is-paused', !paused);
-    });
+    const images = carousel.querySelectorAll<HTMLImageElement>('.carousel-track img');
+    Promise.all(Array.from(images, (image) => image.decode().catch(() => undefined)))
+      .then(() => carousel.classList.add('is-enhanced'));
   }
 </script>
 
 <style>
   .is-enhanced .carousel-window { overflow: hidden; }
-  .is-enhanced .carousel-track { animation: move-services 48s linear infinite; }
+  .is-enhanced .carousel-track { animation: move-services 60s linear infinite; }
   .carousel-group[aria-hidden='true'] { display: none; }
   .is-enhanced .carousel-group[aria-hidden='true'] { display: flex; }
-  .carousel-toggle[hidden] { display: none; }
-  .is-paused .carousel-track { animation-play-state: paused; }
   @keyframes move-services { to { transform: translateX(-50%); } }
   @media (prefers-reduced-motion: reduce) {
     .is-enhanced .carousel-window { overflow-x: auto; }

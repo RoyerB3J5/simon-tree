@@ -1,0 +1,52 @@
+---
+import { designIcon, type ShapehubTheme } from '../data/shapehub';
+import { contact } from '../data/contact';
+interface Props { theme: ShapehubTheme; }
+const { theme } = Astro.props;
+const actionClass = `flex h-14 w-full cursor-pointer items-center gap-2 rounded-[var(--action-radius)] border border-[var(--control-border)] px-4 font-semibold text-primary-action-ink no-underline shadow-[var(--control-shadow)] [background:var(--action-primary)] ${theme === 'shapehub' ? 'justify-center' : ''}`;
+---
+<button type="button" class={actionClass} data-save-contact data-contact={JSON.stringify(contact)}>
+  <img class="shrink-0" src={designIcon(theme, 'contact')} alt="" /><span>Save Contact</span>{theme !== 'shapehub' && <img class="ml-auto shrink-0" src={designIcon(theme, 'arrow-primary')} alt="" />}
+</button>
+
+<script>
+  import type { Contact } from '../data/contact';
+
+  const escapeVCard = (value: string) => value.replace(/\\/g, '\\\\').replace(/\r\n|\r|\n/g, '\\n').replace(/;/g, '\\;').replace(/,/g, '\\,');
+
+  function buildVCard(contact: Contact): string {
+    const field = (value: string) => escapeVCard(value.trim());
+    const name = [contact.firstName, contact.lastName].filter(Boolean).join(' ').trim() || contact.org;
+    const address = [contact.street, contact.city, contact.region, contact.postal, contact.country];
+    const lines = [
+      'BEGIN:VCARD',
+      'VERSION:3.0',
+      `FN:${field(name)}`,
+      `N:${field(contact.lastName)};${field(contact.firstName)};;;`,
+      contact.org && `ORG:${field(contact.org)}`,
+      contact.title && `TITLE:${field(contact.title)}`,
+      contact.phone && `TEL;TYPE=CELL,VOICE:${field(contact.phone)}`,
+      contact.email && `EMAIL;TYPE=INTERNET:${field(contact.email)}`,
+      contact.url && `URL:${field(contact.url)}`,
+      address.some(Boolean) && `ADR;TYPE=WORK:;;${address.map(field).join(';')}`,
+      contact.note && `NOTE:${field(contact.note)}`,
+      'END:VCARD',
+    ];
+    return `${lines.filter(Boolean).join('\r\n')}\r\n`;
+  }
+
+  for (const button of document.querySelectorAll<HTMLButtonElement>('[data-save-contact]')) {
+    button.addEventListener('click', () => {
+      if (!button.dataset.contact) return;
+      const contact = JSON.parse(button.dataset.contact) as Contact;
+      const url = URL.createObjectURL(new Blob([buildVCard(contact)], { type: 'text/vcard;charset=utf-8' }));
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'simon-tree-services.vcf';
+      document.body.append(link);
+      link.click();
+      link.remove();
+      window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+    });
+  }
+</script>

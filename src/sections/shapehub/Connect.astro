@@ -2,6 +2,7 @@
 import ProfileIdentity from '../../components/ProfileIdentity.astro';
 import ProfileLinks from '../../components/ProfileLinks.astro';
 import QrDialog from '../../components/QrDialog.astro';
+import QrInteractions from '../../components/QrInteractions.astro';
 import { connectCards } from '../../data/connect';
 import type { ShapehubTheme } from '../../data/shapehub';
 
@@ -46,30 +47,4 @@ const { theme } = Astro.props;
   {connectCards.map((card) => <QrDialog card={card} theme={theme} />)}
 </div>
 
-<script>
-  for (const connect of document.querySelectorAll<HTMLElement>('[data-connect]')) {
-    const triggers = connect.querySelectorAll<HTMLButtonElement>('[data-open-dialog]');
-    for (const trigger of triggers) {
-      const target = trigger.dataset.openDialog;
-      const dialog = target ? document.getElementById(target) : null;
-      if (!(dialog instanceof HTMLDialogElement)) continue;
-
-      let previousOverflow = '';
-      trigger.addEventListener('click', () => {
-        previousOverflow = document.body.style.overflow;
-        dialog.showModal();
-        document.body.style.overflow = 'hidden';
-      });
-      dialog.querySelector<HTMLButtonElement>('[data-close-dialog]')?.addEventListener('click', () => dialog.close());
-      dialog.addEventListener('click', (event) => {
-        if (event.target !== dialog) return;
-        const rect = dialog.getBoundingClientRect();
-        if (event.clientX < rect.left || event.clientX > rect.right || event.clientY < rect.top || event.clientY > rect.bottom) dialog.close();
-      });
-      dialog.addEventListener('close', () => {
-        document.body.style.overflow = previousOverflow;
-        trigger.focus();
-      });
-    }
-  }
-</script>
+<QrInteractions />

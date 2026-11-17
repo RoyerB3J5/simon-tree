@@ -1,0 +1,52 @@
+---
+import ProfileIdentity from '../../components/ProfileIdentity.astro';
+import ContactAction from '../../components/ContactAction.astro';
+import SocialLinks from '../../components/SocialLinks.astro';
+import QrDialog from '../../components/QrDialog.astro';
+import QrInteractions from '../../components/QrInteractions.astro';
+import SectionLabel from '../../components/SectionLabel.astro';
+import { connectCards } from '../../data/connect';
+
+const theme = 'shapehub';
+const cards = connectCards.map((card) => card.id === 'info' ? {
+  ...card,
+  title: 'Business profile',
+  description: 'Scan to view our links and contact information.',
+  modalTitle: 'Business profile',
+  summary: 'Show your customers your social media, website, and contact information.',
+} : {
+  ...card,
+  title: 'Request a Google Review',
+  description: 'Scan to leave us a review about your experience.',
+  modalTitle: 'Google Review',
+  summary: 'Invite your customers to share their experience and leave a review.',
+});
+---
+<div class="grid gap-8" data-connect>
+  <ProfileIdentity theme={theme} />
+  <hr class="border-0 border-t border-[#022b02]/10" />
+
+  <section class="grid gap-5 text-center" aria-labelledby="business-heading">
+    <div class="grid gap-3">
+      <h1 id="business-heading" class="text-trim text-2xl leading-tight font-bold">Your Business, All in One Place</h1>
+      <p class="text-sm leading-[1.5]">Everything you need to share your business and connect with your customers.</p>
+    </div>
+    <ContactAction theme={theme} />
+  </section>
+
+  <section class="grid gap-5" aria-labelledby="links-heading">
+    <SectionLabel id="links-heading">Your Links</SectionLabel>
+    <SocialLinks theme={theme} />
+  </section>
+
+  <section class="grid gap-5" aria-labelledby="share-heading">
+    <SectionLabel id="share-heading">Share Your Business</SectionLabel>
+    {cards.map((card) => <button type="button" aria-haspopup="dialog" aria-controls={`qr-dialog-${card.id}`} data-open-dialog={`qr-dialog-${card.id}`} class="flex min-h-[127px] w-full items-center gap-6 rounded-xl bg-white px-4 py-5 text-left shadow-[0_3px_4px_rgba(0,0,0,.15)]">
+      <img src="/icons/shapehub/qr.svg" width="56" height="56" alt="" class="shrink-0" />
+      <span class="grid min-w-0 flex-1 gap-2"><span class="text-[15px] leading-[1.35] font-semibold">{card.title}</span><span class="text-sm leading-[1.5]">{card.summary}</span></span>
+      <img src="/icons/shapehub/arrow.svg" width="24" height="24" alt="" class="shrink-0" />
+    </button>)}
+  </section>
+  {cards.map((card) => <QrDialog card={card} theme={theme} />)}
+</div>
+<QrInteractions />

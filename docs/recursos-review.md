@@ -1,14 +1,14 @@
 # Review: flujo y recursos pendientes
 
-Rutas: `/shapehub-1/review/` y `/shapehub-2/review/`.
+Rutas: `/review/` para SHAPE HUB 1 y `/shapehub-1/review/` y `/shapehub-2/review/` para las opciones existentes.
 
 Referencia vigente: [SIMON — MY](https://www.figma.com/design/3jYlKpq3itEC7yMEwmQJ9d/SIMON---MY?m=dev). Frames de Review: OPC 1 `1:274`, OPC 2 `1:6`.
 
 ## Flujo implementado
 
 - Estado inicial: ninguna valoración seleccionada; cinco estrellas con borde amarillo y sin relleno.
-- Selección de una a cuatro estrellas: se rellena la cantidad elegida y no aparece contenido adicional.
-- Selección de cinco: se muestran la valoración excelente, el texto para copiar y la acción de Google.
+- En `/review/`, una a tres estrellas muestran el widget externo `FormReview`; cuatro o cinco muestran el texto para copiar. La acción de Google permanece oculta hasta nueva indicación.
+- En las rutas OPC 1 y OPC 2, una a cuatro estrellas no muestran contenido adicional y cinco muestran la valoración excelente, el texto para copiar y la acción de Google.
 - El texto se elige aleatoriamente una vez durante la visita a la página y se conserva al cambiar la valoración y volver a cinco.
 - La copia se ejecuta únicamente al pulsar Copy text. Solo se comunica éxito cuando la promesa del portapapeles se resuelve; ante error, se ofrece selección y copia manual.
 - Copiar no abre Google ni envía contenido. La navegación se ejecutará por separado cuando exista un destino configurado.
@@ -18,10 +18,10 @@ Referencia vigente: [SIMON — MY](https://www.figma.com/design/3jYlKpq3itEC7yME
 
 `src/data/review.ts` contiene:
 
-- `googleReviewUrl`: actualmente `null`. Sustituir por el enlace real de Google Business Profile que proporcione el usuario. Hasta entonces, la acción queda deshabilitada, sin una URL ficticia.
-- `reviewTexts`: lista extensible de textos aprobados. Por ahora contiene únicamente el ejemplo del Figma. Queda pendiente que el usuario proporcione las demás opciones (aproximadamente seis en total, sin un número fijo). Con un solo texto, la elección siempre devuelve ese ejemplo.
+- `googleReviewUrl`: actualmente `null`. Sustituir por el enlace real de Google Business Profile que proporcione el usuario. La acción queda deshabilitada mientras no exista ese enlace; en `/review/` también permanece oculta hasta nueva indicación.
+- `reviewTexts`: lista extensible de textos compartidos por las variantes. La selección usa los textos que ya están registrados en el archivo.
 
-El logo y el fondo de OPC 2 se reutilizan de la configuración compartida y siguen pendientes del usuario, según [recursos de Clients](recursos-clients.md).
+El logo y el fondo de OPC 2 se reutilizan de la configuración compartida, según [recursos de Clients](recursos-clients.md).
 
 ## SVG
 

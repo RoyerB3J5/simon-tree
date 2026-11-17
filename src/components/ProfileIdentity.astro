@@ -3,11 +3,17 @@ import { profile, designIcon, type ShapehubTheme } from '../data/shapehub';
 interface Props { theme: ShapehubTheme; }
 const { theme } = Astro.props;
 ---
-<header class="flex flex-col items-center gap-3 text-center">
+{theme === 'shapehub' ? <header class="flex flex-col items-center text-center">
+  <div class="grid h-[78px] w-[206px] max-w-full place-items-center">
+    {profile.logo && <img class="h-full w-full object-contain" src={profile.logo.src} width={profile.logo.width} height={profile.logo.height} alt="Simon Tree Services" />}
+  </div>
+  <p class="text-trim mt-4 text-sm">{profile.tagline}</p>
+  <p class="text-trim mt-4 flex items-center gap-1 text-base font-semibold"><img src={designIcon(theme, 'location')} width="8" height="10" alt="" />{profile.location}.</p>
+</header> : <header class="flex flex-col items-center gap-3 text-center">
   <h1 class="sr-only">Simon Tree Services</h1>
   <div class="grid h-[61px] w-40 place-items-center">
     {profile.logo && <img class="h-full w-full object-contain" src={profile.logo.src} width={profile.logo.width} height={profile.logo.height} alt="" />}
   </div>
   <p class="flex items-center gap-1 text-[15px] font-semibold"><img class="shrink-0" src={designIcon(theme, 'location')} alt="" />{profile.location}</p>
   <p class="flex max-w-full items-center justify-center gap-2 rounded-[18px] border border-current px-3 py-2 text-xs font-semibold uppercase [background:var(--tagline-background)]"><img class="shrink-0" src={designIcon(theme, 'badge')} alt="" /><span>{profile.tagline}</span></p>
-</header>
+</header>}

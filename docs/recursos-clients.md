@@ -1,5 +1,7 @@
 # Recursos pendientes para Clients
 
+La variante del bloque SHAPE HUB 1 está disponible en `/bio/`. Reutiliza las imágenes y los enlaces compartidos indicados abajo; su carrusel usa tarjetas de 218 × 213 px con un espacio de imagen de 200 × 160 px. El formulario se integrará como widget externo cuando se facilite.
+
 Ambas variantes comparten los mismos recursos de contenido. El usuario coloca las imágenes; no se han descargado ni sustituido por imágenes de muestra.
 
 ## Imágenes
@@ -27,7 +29,7 @@ Ya están conectados en `public/icons/shapehub-1/` y `public/icons/shapehub-2/`:
 
 ## Enlaces y widget
 
-Pendientes de proporcionar por el usuario: Facebook, Instagram, Website, Save Contact y Our Services. Los controles sin destino permanecen deshabilitados; no llevan URLs de ejemplo.
+Pendientes de proporcionar por el usuario: Facebook, Instagram y Website. Los controles sin destino permanecen deshabilitados; no llevan URLs de ejemplo. Save Contact descarga una tarjeta vCard con los datos disponibles en `src/data/contact.ts`; los demás campos quedan vacíos. El diseño actualizado de OPC 1 ya no muestra el acceso Our Services en estas páginas.
 
 El bloque de presupuesto muestra únicamente los dos textos aprobados. No se han creado campos, botón de envío ni un iframe con destino ficticio. El widget se integrará cuando se proporcione su código y condiciones de tamaño.
 

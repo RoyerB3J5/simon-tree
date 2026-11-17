@@ -1,5 +1,6 @@
 export type ImageAsset = { src: string; width: number; height: number };
-export type ShapehubTheme = 'shapehub-1' | 'shapehub-2';
+export type ShapehubTheme = 'shapehub' | 'shapehub-1' | 'shapehub-2';
+export type ProfileLink = { label: string; href: string | null; icon: DesignIconName };
 
 // Original SVG exports from the project's current Figma file.
 export type DesignIconName = 'location' | 'badge' | 'facebook' | 'instagram' | 'website' | 'contact' | 'services' | 'arrow-primary' | 'arrow-secondary';
@@ -12,7 +13,7 @@ export const profile: { logo: ImageAsset | null; location: string; tagline: stri
     width: 1000,
     height: 377,
   },
-  location: 'Orlando, Florida',
+  location: 'Atlanta, Georgia',
   tagline: 'Professional tree services you can trust.',
 };
 
@@ -28,7 +29,7 @@ export const services: { title: string; image: ImageAsset | null }[] = [
 ];
 
 // Destinations are intentionally unset until provided by the client.
-export const links: { label: string; href: string | null; icon: DesignIconName }[] = [
+export const links: ProfileLink[] = [
   { label: 'Facebook', href: null, icon: 'facebook' },
   { label: 'Instagram', href: null, icon: 'instagram' },
   { label: 'Website', href: null, icon: 'website' },
