@@ -19,7 +19,7 @@ export const contact: Contact = {
   lastName: '',
   org: 'Simon Tree Services',
   title: '',
-  phone: '',
+  phone: '+16785856772',
   email: '',
   url: '',
   street: '',

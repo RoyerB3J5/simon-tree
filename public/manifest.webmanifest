@@ -1,0 +1,17 @@
+{
+  "name": "Simon Tree Services",
+  "short_name": "Simon Tree",
+  "description": "Professional tree services you can trust in Atlanta, Georgia.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "icons": [
+    {
+      "src": "/app_icon.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
