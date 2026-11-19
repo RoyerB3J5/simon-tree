@@ -46,9 +46,9 @@ const actionClass = 'mt-4 flex min-h-14 items-center gap-2 rounded-xl px-4 py-2 
       <p data-review-text tabindex="-1" class="rounded-xl border border-[#b2b7bb] bg-[#f5f5f5] px-4 py-6 text-sm leading-[1.5]"></p>
       <p data-copy-status class="text-sm empty:hidden" role="status" aria-live="polite"></p>
     </div>
-    {googleReviewUrl ? <a class={actionClass} href={googleReviewUrl} hidden>
+    {googleReviewUrl ? <a class={actionClass} href={googleReviewUrl}>
       <img src={icon('google-action')} width="33" height="33" alt="" /><span>Continue to Google Review</span><img class="ml-auto" src={icon('arrow')} alt="" />
-    </a> : <span class={actionClass} role="link" aria-disabled="true" hidden>
+    </a> : <span class={actionClass} role="link" aria-disabled="true">
       <img src={icon('google-action')} width="33" height="33" alt="" /><span>Continue to Google Review</span><img class="ml-auto" src={icon('arrow')} alt="" />
     </span>}
   </div>
@@ -61,4 +61,30 @@ const actionClass = 'mt-4 flex min-h-14 items-center gap-2 rounded-xl px-4 py-2 
   .business-rating label { position: relative; width: 26px; height: 24px; }
   .business-rating label::before { content: ''; position: absolute; inset: -10px -11px; }
   .business-rating label:has(input:focus-visible) { outline: 2px solid #084e17; outline-offset: 2px; }
+
+  .business-rating label:last-of-type img {
+    transform-origin: 50% 90%;
+    animation: fifth-star-bounce 1.2s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .business-rating label:last-of-type:has(input:checked) img {
+    animation: none;
+    transform: none;
+    will-change: auto;
+  }
+
+  @keyframes fifth-star-bounce {
+    0%, 100% { transform: translateY(0) scale(1); }
+    18% { transform: translateY(-7px) scale(1.06); }
+    36% { transform: translateY(0) scale(0.96, 1.04); }
+    50% { transform: translateY(-3px) scale(1.02); }
+    64% { transform: translateY(0) scale(1); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .business-rating label:last-of-type img {
+      animation: none;
+    }
+  }
 </style>

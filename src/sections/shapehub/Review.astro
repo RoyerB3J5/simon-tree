@@ -31,7 +31,8 @@ const actionClass = 'flex min-h-14 items-center gap-2 rounded-[var(--action-radi
         const value = index + 1;
         const outline = icon(`star-${shape}-outline`);
         const filled = icon(`star-${shape}`);
-        return <label class="cursor-pointer rounded-sm flex justify-center items-center">
+        const isFifthStar = value === 5;
+        return <label class:list={['flex cursor-pointer items-center justify-center rounded-sm', { 'fifth-rating-star': isFifthStar }]}>
           <input class="sr-only" type="radio" name="rating" value={value} aria-label={`${value} ${value === 1 ? 'star' : 'stars'}`} />
           <img data-rating-star data-filled-src={filled} data-outline-src={outline} src={outline} width="26" height="24" alt="" />
         </label>;
@@ -66,3 +67,36 @@ const actionClass = 'flex min-h-14 items-center gap-2 rounded-[var(--action-radi
 </article>
 
 <ReviewInteractions />
+
+<style>
+  .fifth-rating-star img {
+    transform-origin: 50% 90%;
+    animation: fifth-star-bounce 1.2s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .fifth-rating-star:has(input:checked) img {
+    animation: none;
+    transform: none;
+    will-change: auto;
+  }
+
+  .fifth-rating-star:has(input:focus-visible) {
+    outline: 2px solid #084e17;
+    outline-offset: 3px;
+  }
+
+  @keyframes fifth-star-bounce {
+    0%, 100% { transform: translateY(0) scale(1); }
+    18% { transform: translateY(-7px) scale(1.06); }
+    36% { transform: translateY(0) scale(0.96, 1.04); }
+    50% { transform: translateY(-3px) scale(1.02); }
+    64% { transform: translateY(0) scale(1); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fifth-rating-star img {
+      animation: none;
+    }
+  }
+</style>
