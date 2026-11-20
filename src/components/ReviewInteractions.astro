@@ -11,6 +11,8 @@
     const text = review.querySelector<HTMLElement>('[data-review-text]');
     const copyButton = review.querySelector<HTMLButtonElement>('[data-copy-review]');
     const status = review.querySelector<HTMLElement>('[data-copy-status]');
+    const pendingAction = review.querySelector<HTMLElement>('[data-review-pending]');
+    const googleAction = review.querySelector<HTMLElement>('[data-google-review]');
     if (!content || !text || !copyButton || !status) continue;
 
     let selectedText: string | undefined;
@@ -29,6 +31,12 @@
           if (scoreLabel) scoreLabel.textContent = value === 5 ? '5.0 Excellent / Outstanding Experience' : `${value}.0`;
           selectedText ??= reviewTexts[Math.floor(Math.random() * reviewTexts.length)];
           text.textContent = selectedText ?? '';
+          if (pendingAction) {
+            requestAnimationFrame(() => {
+              const action = googleAction && !googleAction.hidden ? googleAction : pendingAction;
+              action.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'end' });
+            });
+          }
         }
       });
     }
@@ -40,6 +48,10 @@
         if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
         await navigator.clipboard.writeText(value);
         status.textContent = 'Text copied.';
+        if (pendingAction && googleAction) {
+          pendingAction.hidden = true;
+          googleAction.hidden = false;
+        }
       } catch {
         const selection = window.getSelection();
         if (selection) {

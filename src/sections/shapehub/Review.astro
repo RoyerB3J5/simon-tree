@@ -11,7 +11,7 @@ const actionClass = 'flex min-h-14 items-center gap-2 rounded-[var(--action-radi
 ---
 
 <article data-review class="rounded-[var(--review-panel-radius)] border border-[var(--review-panel-border)] px-[var(--review-panel-inline-padding)] py-6 text-[#034812] shadow-[var(--review-panel-shadow)] [background:var(--review-panel-background)]">
-  <div class="flex items-center justify-between gap-2 text-sm">
+  <div class="flex items-center justify-between gap-2 text-[15px]">
     <p class="flex items-center gap-2"><img src={icon('google')} width="16" height="16" alt="" />Google Reviews</p>
     <p class="flex items-center gap-1"><img src={icon('score')} width="12" height="11" alt="" /><span>5.0</span></p>
   </div>
@@ -53,7 +53,7 @@ const actionClass = 'flex min-h-14 items-center gap-2 rounded-[var(--action-radi
         </button>
       </div>
       <p data-review-text tabindex="-1" class="rounded-lg border border-[#b2b7bb] bg-[#f5f5f5] px-4 py-6 text-[13px] leading-normal"></p>
-      <p data-copy-status class="text-sm" role="status" aria-live="polite"></p>
+      <p data-copy-status class="text-[15px]" role="status" aria-live="polite"></p>
     </div>
     {
       /* */
@@ -88,7 +88,7 @@ const actionClass = 'flex min-h-14 items-center gap-2 rounded-[var(--action-radi
 
   @keyframes fifth-star-bounce {
     0%, 100% { transform: translateY(0) scale(1); }
-    18% { transform: translateY(-7px) scale(1.06); }
+    18% { transform: translateY(-7px) scale(1.26923, 1.29167); }
     36% { transform: translateY(0) scale(0.96, 1.04); }
     50% { transform: translateY(-3px) scale(1.02); }
     64% { transform: translateY(0) scale(1); }

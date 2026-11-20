@@ -6,7 +6,7 @@ const { variant = 'default' } = Astro.props;
 <section class="min-w-0" aria-label="Our services" data-services-carousel>
   <div class="carousel-window overflow-x-auto" role="region" tabindex="0" aria-label="Tree services">
     <div class="carousel-track flex w-max">
-      {[false, true].map((duplicate) => (
+      {[true, false, true].map((duplicate) => (
         <ul class="carousel-group flex flex-none list-none gap-2 pr-2" aria-hidden={duplicate ? 'true' : undefined}>
           {services.map((service) => (
             <li class:list={['flex shrink-0 flex-col gap-[19px] overflow-hidden rounded-lg px-2 pt-2 pb-4 text-center', variant === 'business' ? 'w-[218px] border border-[#dbe2dc] bg-white' : 'w-[250px]', variant !== 'business' && (service.title === 'Full Tree Service' || service.title === 'Brush Cutting' ? 'bg-white' : '[background:var(--service-background)]')]}>
@@ -24,21 +24,103 @@ const { variant = 'default' } = Astro.props;
 
 <script>
   for (const carousel of document.querySelectorAll<HTMLElement>('[data-services-carousel]')) {
+    const windowEl = carousel.querySelector<HTMLElement>('.carousel-window');
+    const track = carousel.querySelector<HTMLElement>('.carousel-track');
+    const group = carousel.querySelector<HTMLElement>('.carousel-group');
+    if (!windowEl || !track || !group) continue;
+
+    let dragStart: { x: number; scrollLeft: number; pointerId: number } | undefined;
+    let interacting = false;
+    let pointerDown = false;
+    let resumeTimer: ReturnType<typeof setTimeout> | undefined;
+    let previousTime: number | undefined;
+    let distance = 0;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+    const pause = () => {
+      interacting = true;
+      previousTime = undefined;
+      clearTimeout(resumeTimer);
+    };
+    const scheduleResume = () => {
+      clearTimeout(resumeTimer);
+      if (!pointerDown) resumeTimer = setTimeout(() => { interacting = false; }, 600);
+    };
+    const normalizePosition = () => {
+      const width = group.offsetWidth;
+      if (!width) return;
+      let adjustment = 0;
+      if (windowEl.scrollLeft < width) adjustment = width;
+      else if (windowEl.scrollLeft >= width * 2) adjustment = -width;
+      if (adjustment) {
+        windowEl.scrollLeft += adjustment;
+        if (dragStart) dragStart.scrollLeft += adjustment;
+      }
+    };
+    const animate = (time: number) => {
+      if (!interacting && !reducedMotion.matches) {
+        if (previousTime !== undefined) {
+          distance += (time - previousTime) * group.offsetWidth / 60000;
+          const pixels = Math.floor(distance);
+          if (pixels) {
+            windowEl.scrollLeft += pixels;
+            distance -= pixels;
+          }
+        }
+        normalizePosition();
+        previousTime = time;
+      } else {
+        previousTime = undefined;
+      }
+      requestAnimationFrame(animate);
+    };
+
+    windowEl.addEventListener('pointerdown', (event) => {
+      pointerDown = true;
+      pause();
+      if (event.pointerType !== 'mouse' || event.button !== 0) return;
+      dragStart = { x: event.clientX, scrollLeft: windowEl.scrollLeft, pointerId: event.pointerId };
+      windowEl.setPointerCapture(event.pointerId);
+      windowEl.classList.add('is-dragging');
+    });
+    windowEl.addEventListener('pointermove', (event) => {
+      if (!dragStart || event.pointerId !== dragStart.pointerId) return;
+      windowEl.scrollLeft = dragStart.scrollLeft - (event.clientX - dragStart.x);
+    });
+    const endDrag = (event: PointerEvent) => {
+      pointerDown = false;
+      if (event.pointerId === dragStart?.pointerId) {
+        dragStart = undefined;
+        windowEl.classList.remove('is-dragging');
+      }
+      scheduleResume();
+    };
+    windowEl.addEventListener('pointerup', endDrag);
+    windowEl.addEventListener('pointercancel', endDrag);
+    windowEl.addEventListener('lostpointercapture', endDrag);
+    windowEl.addEventListener('dragstart', (event) => event.preventDefault());
+    windowEl.addEventListener('keydown', () => { pause(); scheduleResume(); });
+    windowEl.addEventListener('wheel', () => { pause(); scheduleResume(); }, { passive: true });
+    windowEl.addEventListener('scroll', () => {
+      if (!carousel.classList.contains('is-enhanced')) return;
+      normalizePosition();
+      if (interacting) scheduleResume();
+    }, { passive: true });
+
     const images = carousel.querySelectorAll<HTMLImageElement>('.carousel-track img');
     Promise.all(Array.from(images, (image) => image.decode().catch(() => undefined)))
-      .then(() => carousel.classList.add('is-enhanced'));
+      .then(() => {
+        carousel.classList.add('is-enhanced');
+        windowEl.scrollLeft = group.offsetWidth;
+        requestAnimationFrame(animate);
+      });
   }
 </script>
 
 <style>
-  .is-enhanced .carousel-window { overflow: hidden; }
-  .is-enhanced .carousel-track { animation: move-services 60s linear infinite; }
+  .carousel-window { cursor: grab; scrollbar-width: none; }
+  .carousel-window::-webkit-scrollbar { display: none; }
+  .carousel-window.is-dragging { cursor: grabbing; user-select: none; }
   .carousel-group[aria-hidden='true'] { display: none; }
   .is-enhanced .carousel-group[aria-hidden='true'] { display: flex; }
-  @keyframes move-services { to { transform: translateX(-50%); } }
-  @media (prefers-reduced-motion: reduce) {
-    .is-enhanced .carousel-window { overflow-x: auto; }
-    .is-enhanced .carousel-track { animation: none; }
-    .is-enhanced .carousel-group[aria-hidden='true'] { display: none; }
-  }
 </style>

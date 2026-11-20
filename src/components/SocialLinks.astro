@@ -4,7 +4,7 @@ interface Props { theme: ShapehubTheme; }
 const { theme } = Astro.props;
 const social = links.slice(0, 3);
 const socialClass = theme === 'shapehub'
-  ? 'flex min-h-[75px] flex-col items-center justify-center gap-3 rounded-[var(--social-radius)] px-1 py-3 text-center text-sm font-semibold text-social-ink no-underline [background:var(--social-background)] shadow-[var(--control-shadow)]'
+  ? 'flex min-h-[75px] flex-col items-center justify-center gap-3 rounded-[var(--social-radius)] px-1 py-3 text-center text-[15px] font-semibold text-social-ink no-underline [background:var(--social-background)] shadow-[var(--control-shadow)]'
   : 'flex min-h-[87px] flex-col items-center justify-center gap-3 rounded-[var(--social-radius)] border border-[var(--control-border)] px-1 py-4 text-center font-semibold text-social-ink no-underline [background:var(--social-background)] first:[background:var(--social-first-background)] shadow-[var(--control-shadow)]';
 ---
 <div class:list={['grid grid-cols-3', theme === 'shapehub' ? 'gap-4' : 'gap-2']}>

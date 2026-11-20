@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap");
 @import "tailwindcss";
 
 /* Inline aliases keep each utility bound to the active runtime theme. */
@@ -19,7 +20,19 @@
   text-box-edge: cap alphabetic;
 }
 
-:root { font-synthesis: none; text-rendering: optimizeLegibility; }
-html, body { min-width: 0; min-height: 100%; }
-body { background-image: var(--page-background-image, none); }
-:focus-visible { outline: 3px solid #084e17; outline-offset: 3px; }
+:root {
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+html,
+body {
+  min-width: 0;
+  min-height: 100%;
+}
+body {
+  background-image: var(--page-background-image, none);
+}
+:focus-visible {
+  outline: 3px solid #084e17;
+  outline-offset: 3px;
+}

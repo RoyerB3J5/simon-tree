@@ -9,13 +9,13 @@ const titleId = `${dialogId}-title`;
 const descriptionId = `${dialogId}-description`;
 ---
 
-{theme === 'shapehub' ? <dialog id={dialogId} aria-labelledby={titleId} aria-describedby={descriptionId} class="qr-dialog qr-dialog-shapehub fixed inset-0 m-auto max-h-[calc(100vh-2rem)] w-[273px] max-w-[calc(100vw-2rem)] overflow-y-auto rounded-xl bg-white px-8 py-8 text-center text-[#022b02]">
+{theme === 'shapehub' ? <dialog id={dialogId} aria-labelledby={titleId} aria-describedby={descriptionId} class="qr-dialog qr-dialog-shapehub fixed inset-0 m-auto max-h-[calc(100vh-2rem)] w-[290px] max-w-[calc(100vw-2rem)] overflow-y-auto rounded-xl bg-white px-8 py-8 text-center text-[#022b02]">
   <h2 id={titleId} class="text-trim text-[15px] font-semibold">{card.modalTitle}</h2>
-  <p id={descriptionId} class="mt-5 text-sm leading-[1.5]">{card.description}</p>
+  <p id={descriptionId} class="mt-5 text-[15px] leading-[1.5]">{card.description}</p>
   <div class="relative mx-auto mt-5 aspect-square w-[209px] max-w-full overflow-hidden">
     {card.image && <img src={card.image.src} width={card.image.width} height={card.image.height} alt={`QR code: ${card.modalTitle}`} class="absolute inset-0 h-full w-full object-contain" />}
   </div>
-  <button type="button" data-close-dialog class="mt-5 text-sm font-semibold underline">Back</button>
+  <button type="button" data-close-dialog class="mt-5 text-[15px] font-semibold underline">Back</button>
 </dialog> : <dialog id={dialogId} aria-labelledby={titleId} aria-describedby={descriptionId} class="qr-dialog fixed inset-0 m-auto max-h-[calc(100vh-2rem)] w-[280px] max-w-[calc(100vw-2rem)] overflow-y-auto rounded-2xl bg-white px-6 pt-4 pb-6 text-center text-[#034812]">
   <div class="flex justify-end">
     <button type="button" class="relative grid h-[18px] w-[18px] place-items-center after:absolute after:top-1/2 after:left-1/2 after:h-11 after:w-11 after:-translate-x-1/2 after:-translate-y-1/2 after:content-['']" data-close-dialog aria-label="Close QR code">
