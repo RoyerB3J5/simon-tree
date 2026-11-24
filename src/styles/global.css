@@ -14,10 +14,26 @@
   --color-service-surface: var(--service-background);
 }
 
-/* Figma trims the cap-height of compact labels; line-height stays readable. */
-@utility text-trim {
-  text-box-trim: trim-both;
-  text-box-edge: cap alphabetic;
+@layer base {
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-feature-settings:
+      "kern" 1,
+      "liga" 1;
+
+    text-box-trim: trim-both;
+    text-box-edge: cap alphabetic;
+
+    -webkit-text-size-adjust: 100%;
+  }
+
+  *::before,
+  *::after {
+    text-box-trim: trim-both;
+    text-box-edge: cap alphabetic;
+  }
 }
 
 :root {

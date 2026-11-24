@@ -7,15 +7,32 @@
     const content = review.querySelector<HTMLElement>('[data-five-star-content]');
     const feedback = review.querySelector<HTMLElement>('[data-feedback-widget]');
     const scoreLabel = review.querySelector<HTMLElement>('[data-rating-score]');
+    const badge = review.querySelector<HTMLElement>('[data-rating-badge]');
+    const suggestion = review.querySelector<HTMLElement>('[data-review-suggestion]');
     const googleMinRating = Number(review.dataset.googleMinRating ?? 5);
     const text = review.querySelector<HTMLElement>('[data-review-text]');
     const copyButton = review.querySelector<HTMLButtonElement>('[data-copy-review]');
+    const regenerateButton = review.querySelector<HTMLButtonElement>('[data-regenerate-review]');
     const status = review.querySelector<HTMLElement>('[data-copy-status]');
     const pendingAction = review.querySelector<HTMLElement>('[data-review-pending]');
     const googleAction = review.querySelector<HTMLElement>('[data-google-review]');
     if (!content || !text || !copyButton || !status) continue;
 
-    let selectedText: string | undefined;
+    let selectedIndex: number | undefined;
+    const setText = (value: string) => {
+      if (text instanceof HTMLTextAreaElement) text.value = value;
+      else text.textContent = value;
+    };
+    const getText = () => text instanceof HTMLTextAreaElement ? text.value : text.textContent ?? '';
+    const chooseSuggestion = () => {
+      if (!reviewTexts.length) return;
+      let index = Math.floor(Math.random() * reviewTexts.length);
+      if (reviewTexts.length > 1 && index === selectedIndex) {
+        index = (index + 1 + Math.floor(Math.random() * (reviewTexts.length - 1))) % reviewTexts.length;
+      }
+      selectedIndex = index;
+      setText(reviewTexts[index]);
+    };
     for (const rating of ratings) {
       rating.addEventListener('change', () => {
         const value = Number(rating.value);
@@ -25,12 +42,17 @@
         });
         const showGoogle = value >= googleMinRating;
         content.hidden = !showGoogle;
+        if (badge) badge.hidden = !showGoogle;
         if (feedback) feedback.hidden = value < 1 || showGoogle;
         status.textContent = '';
         if (showGoogle) {
           if (scoreLabel) scoreLabel.textContent = value === 5 ? '5.0 Excellent / Outstanding Experience' : `${value}.0`;
-          selectedText ??= reviewTexts[Math.floor(Math.random() * reviewTexts.length)];
-          text.textContent = selectedText ?? '';
+          if (selectedIndex === undefined) chooseSuggestion();
+          if (suggestion) {
+            requestAnimationFrame(() => {
+              suggestion.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth', block: 'start' });
+            });
+          }
           if (pendingAction) {
             requestAnimationFrame(() => {
               const action = googleAction && !googleAction.hidden ? googleAction : pendingAction;
@@ -41,8 +63,14 @@
       });
     }
 
+    regenerateButton?.addEventListener('click', () => {
+      chooseSuggestion();
+      status.textContent = '';
+    });
+    if (text instanceof HTMLTextAreaElement) text.addEventListener('input', () => { status.textContent = ''; });
+
     copyButton.addEventListener('click', async () => {
-      const value = text.textContent;
+      const value = getText();
       if (!value) return;
       try {
         if (!navigator.clipboard?.writeText) throw new Error('Clipboard unavailable');
@@ -53,8 +81,11 @@
           googleAction.hidden = false;
         }
       } catch {
-        const selection = window.getSelection();
-        if (selection) {
+        if (text instanceof HTMLTextAreaElement) {
+          text.focus();
+          text.select();
+        } else if (window.getSelection()) {
+          const selection = window.getSelection()!;
           const range = document.createRange();
           range.selectNodeContents(text);
           selection.removeAllRanges();

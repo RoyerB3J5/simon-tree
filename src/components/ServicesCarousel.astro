@@ -1,9 +1,13 @@
 ---
 import { services } from '../data/shapehub';
+import ContactAction from './ContactAction.astro';
+import SectionLabel from './SectionLabel.astro';
 interface Props { variant?: 'default' | 'business'; }
 const { variant = 'default' } = Astro.props;
+const theme = 'shapehub';
 ---
-<section class="min-w-0" aria-label="Our services" data-services-carousel>
+<section class="min-w-0 flex flex-col justify-center gap-5" aria-label="Our services" data-services-carousel>
+  <SectionLabel id="bio-services">Our Services</SectionLabel>
   <div class="carousel-window overflow-x-auto" role="region" tabindex="0" aria-label="Tree services">
     <div class="carousel-track flex w-max">
       {[true, false, true].map((duplicate) => (
@@ -13,13 +17,17 @@ const { variant = 'default' } = Astro.props;
               <div class="aspect-[5/4] w-full overflow-hidden rounded-lg">
                 {service.image && <img class="block h-full w-full object-cover" src={service.image.src} alt="" width={service.image.width} height={service.image.height} loading="eager" decoding="async" />}
               </div>
-              <p class:list={['text-trim leading-normal font-semibold text-ink', variant === 'business' ? 'text-xs' : 'text-base uppercase']}>{variant === 'business' && service.title === 'Full Tree Service' ? 'Full Tree Services' : service.title}</p>
+              <p class:list={['text-trim leading-normal font-semibold text-ink', variant === 'business' ? 'text-[15px]' : 'text-[15px] font-normal leading-[150%] uppercase']}>{variant === 'business' && service.title === 'Full Tree Service' ? 'Full Tree Services' : service.title}</p>
             </li>
           ))}
         </ul>
       ))}
     </div>
   </div>
+  <div class='w-full flex justify-center items-center px-4'>
+    <ContactAction theme={theme} variant={variant} />
+  </div>
+  
 </section>
 
 <script>

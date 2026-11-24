@@ -6,7 +6,7 @@ const { variant = 'default' } = Astro.props;
 // The external form widget will be integrated here when supplied.
 ---
 <section class:list={['px-4 py-8', variant === 'business' ? 'rounded-2xl bg-white' : 'rounded-[var(--panel-radius)] border border-surface-border [background:var(--surface-background)] shadow-[var(--control-shadow)]']} aria-labelledby="estimate-title">
-  <h2 class="text-trim text-lg leading-normal font-semibold text-[var(--heading-color)]" id="estimate-title">Get a free estimate</h2>
-  <p class="text-trim my-6 max-w-[321px] text-[15px]">Fill out the form below and we’ll get back to you soon</p>
+  <h2 class="text-trim text-[24px] leading-normal font-bold text-[var(--heading-color)]" id="estimate-title">Get a free estimate</h2>
+  <p class="text-trim my-6 max-w-[280px] text-[15px] font-normal leading-[150%]">Fill out the form below and we’ll get back to you soon</p>
   <FormContact />
 </section>

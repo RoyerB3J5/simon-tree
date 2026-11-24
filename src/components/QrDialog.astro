@@ -10,9 +10,9 @@ const descriptionId = `${dialogId}-description`;
 ---
 
 {theme === 'shapehub' ? <dialog id={dialogId} aria-labelledby={titleId} aria-describedby={descriptionId} class="qr-dialog qr-dialog-shapehub fixed inset-0 m-auto max-h-[calc(100vh-2rem)] w-[290px] max-w-[calc(100vw-2rem)] overflow-y-auto rounded-xl bg-white px-8 py-8 text-center text-[#022b02]">
-  <h2 id={titleId} class="text-trim text-[15px] font-semibold">{card.modalTitle}</h2>
-  <p id={descriptionId} class="mt-5 text-[15px] leading-[1.5]">{card.description}</p>
-  <div class="relative mx-auto mt-5 aspect-square w-[209px] max-w-full overflow-hidden">
+  <h2 id={titleId} class="text-trim text-[20px] font-semibold">{card.modalTitle}</h2>
+  <p id={descriptionId} class="mt-6 text-[15px] leading-[1.5]">{card.description}</p>
+  <div class="relative mx-auto mt-6 aspect-square w-[209px] max-w-full overflow-hidden">
     {card.image && <img src={card.image.src} width={card.image.width} height={card.image.height} alt={`QR code: ${card.modalTitle}`} class="absolute inset-0 h-full w-full object-contain" />}
   </div>
   <button type="button" data-close-dialog class="mt-5 text-[15px] font-semibold underline">Back</button>

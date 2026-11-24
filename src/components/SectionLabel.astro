@@ -2,4 +2,8 @@
 interface Props { id: string; }
 const { id } = Astro.props;
 ---
-<div class="flex items-center gap-2"><h2 id={id} class="text-trim shrink-0 text-[15px] font-semibold"><slot /></h2><span class="h-px flex-1 bg-[#022b02]/10" aria-hidden="true"></span></div>
+<div class="grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+  <span class="h-px bg-[#022b02]/10" aria-hidden="true"></span>
+  <h2 id={id} class="text-trim shrink-0 text-center text-[15px] font-semibold leading-[150%]"><slot /></h2>
+  <span class="h-px bg-[#022b02]/10" aria-hidden="true"></span>
+</div>

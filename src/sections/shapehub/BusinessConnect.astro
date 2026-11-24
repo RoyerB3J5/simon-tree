@@ -27,11 +27,10 @@ const cards = connectCards.map((card) => card.id === 'info' ? {
   <hr class="border-0 border-t border-[#022b02]/10" />
 
   <section class="grid gap-5 text-center" aria-labelledby="business-heading">
-    <div class="grid gap-3">
+    <div class="grid gap-4">
       <h1 id="business-heading" class="text-trim text-2xl leading-tight font-bold">Your Business, All in One Place</h1>
-      <p class="text-[15px] leading-[1.5]">Everything you need to share your business and connect with your customers.</p>
+      <p class="text-[15px] leading-[1.5] font-normal">Everything you need to share your business <br/> and connect with your customers.</p>
     </div>
-    <ContactAction theme={theme} />
   </section>
 
   <section class="grid gap-5" aria-labelledby="links-heading">
@@ -41,9 +40,14 @@ const cards = connectCards.map((card) => card.id === 'info' ? {
 
   <section class="grid gap-5" aria-labelledby="share-heading">
     <SectionLabel id="share-heading">Share Your Business</SectionLabel>
-    {cards.map((card) => <button type="button" aria-haspopup="dialog" aria-controls={`qr-dialog-${card.id}`} data-open-dialog={`qr-dialog-${card.id}`} class="flex min-h-[127px] w-full items-center gap-6 rounded-xl bg-white px-4 py-5 text-left shadow-[0_3px_4px_rgba(0,0,0,.15)]">
-      <img src="/icons/shapehub/qr.svg" width="56" height="56" alt="" class="shrink-0" />
-      <span class="grid min-w-0 flex-1 gap-2"><span class="text-[15px] leading-[1.35] font-semibold">{card.title}</span><span class="text-[15px] leading-[1.5]">{card.summary}</span></span>
+    {cards.map((card, index) => <button type="button" aria-haspopup="dialog" aria-controls={`qr-dialog-${card.id}`} data-open-dialog={`qr-dialog-${card.id}`} class="flex w-full justify-between items-center gap-6 rounded-xl bg-white p-4 text-left shadow-[0_3px_4px_rgba(0,0,0,.15)]">
+      {index === 1
+        ? <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 56 56" fill="none" class="shrink-0" aria-hidden="true">
+            <rect width="56" height="56" rx="8" fill="#F0F5EA" />
+            <path d="M40.5 25.3006C40.5 25.5224 40.3698 25.7643 40.1094 26.0265L34.6556 31.38L35.9477 38.9414C35.9577 39.012 35.9627 39.1128 35.9627 39.2439C35.9627 39.4556 35.9102 39.6345 35.805 39.7807C35.6998 39.9269 35.5471 40 35.3468 40C35.1564 40 34.9561 39.9395 34.7458 39.8185L28 36.2495L21.2542 39.8185C21.0339 39.9395 20.8335 40 20.6532 40C20.4429 40 20.2852 39.9269 20.18 39.7807C20.0748 39.6345 20.0222 39.4556 20.0222 39.2439C20.0222 39.1834 20.0323 39.0825 20.0523 38.9414L21.3444 31.38L15.8756 26.0265C15.6252 25.7543 15.5 25.5123 15.5 25.3006C15.5 24.9275 15.7804 24.6957 16.3413 24.6049L23.8834 23.5009L27.2638 16.62C27.4541 16.2067 27.6995 16 28 16C28.3005 16 28.5459 16.2067 28.7362 16.62L32.1166 23.5009L39.6587 24.6049C40.2196 24.6957 40.5 24.9275 40.5 25.3006Z" stroke-width="2" stroke="#022B02" />
+          </svg>
+        : <img src="/icons/shapehub/qr.svg" width="56" height="56" alt="" class="shrink-0" />}
+      <span class="grid min-w-0 flex-1 gap-4"><span class="text-[15px] leading-[1.35] font-semibold">{card.title}</span><span class="text-[15px] leading-[1.5]">{card.summary}</span></span>
       <img src="/icons/shapehub/arrow.svg" width="24" height="24" alt="" class="shrink-0" />
     </button>)}
   </section>

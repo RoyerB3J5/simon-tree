@@ -5,6 +5,7 @@ import SocialLinks from '../../components/SocialLinks.astro';
 import ServicesCarousel from '../../components/ServicesCarousel.astro';
 import EstimateWidget from '../../components/EstimateWidget.astro';
 import SectionLabel from '../../components/SectionLabel.astro';
+import { contact } from '../../data/contact';
 const theme = 'shapehub';
 ---
 <div class="grid gap-8">
@@ -16,18 +17,39 @@ const theme = 'shapehub';
       <h1 id="welcome-heading" class="text-trim text-2xl leading-tight font-bold">Welcome</h1>
       <p class="mx-auto text-[15px] leading-[1.5]" style="max-width: 300px">Find all our information here and stay connected with us.</p>
     </div>
-    <ContactAction theme={theme} />
   </section>
-
-  <ServicesCarousel variant="business" />
 
   <section class="bio-inset grid gap-5" aria-labelledby="bio-links-heading">
     <SectionLabel id="bio-links-heading">Connect With Us</SectionLabel>
     <SocialLinks theme={theme} />
+    <div class="grid grid-cols-2 gap-4">
+      <a href={`tel:${contact.phone}`} class="flex h-12 min-w-0 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#d90000] to-[#ff0000] px-2 text-center text-[15px] font-semibold text-white no-underline shadow-[var(--control-shadow)]">
+        <img src="/icons/shapehub/phone.svg" width="20" height="20" alt="" class="shrink-0" />
+        <span class="text-trim">Call Now</span>
+      </a>
+      <a href="#estimate-title" data-estimate-link class="flex h-12 min-w-0 items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#d90000] to-[#ff0000] px-2 text-center text-[15px] font-semibold text-white no-underline shadow-[var(--control-shadow)]">
+        <span class="flex size-5 shrink-0 items-center justify-center"><img src="/icons/shapehub/estimate.svg" width="15.3333" height="18.6667" alt="" /></span>
+        <span class="text-trim">Get a estimate</span>
+      </a>
+    </div>
   </section>
+  
+  <ServicesCarousel variant="business" />
+
+  <hr class="bio-inset border-0 border-t border-[#022b02]/10" />
 
   <div class="bio-inset"><EstimateWidget variant="business" /></div>
 </div>
+
+<script>
+  document.querySelector<HTMLAnchorElement>('[data-estimate-link]')?.addEventListener('click', (event) => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    const target = document.getElementById('estimate-title');
+    if (!target || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    event.preventDefault();
+    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+</script>
 
 <style>
   .bio-inset { margin-inline: 24px; }

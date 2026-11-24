@@ -6,9 +6,10 @@ import { googleReviewUrl } from '../../data/review';
 
 const icon = (name: string) => `/icons/shapehub-1/review-${name}.svg`;
 const starShapes = [1, 2, 3, 3, 1];
-const actionClass = 'mt-4 flex min-h-14 items-center gap-2 rounded-xl px-4 py-2 text-[15px] font-semibold text-primary-action-ink no-underline shadow-[var(--control-shadow)] [background:var(--action-primary)]';
+const actionClass = 'flex h-12 w-full items-center justify-center gap-2 rounded-xl px-4 text-[15px] font-semibold text-primary-action-ink no-underline shadow-[var(--control-shadow)] [background:var(--action-primary)]';
 ---
-<article data-review data-google-min-rating="4" class="rounded-2xl bg-white px-4 py-4 text-[#022b02]">
+<div data-review data-google-min-rating="4" class="grid gap-4 text-[#022b02]">
+<article class="rounded-2xl bg-white px-4 py-4">
   <div class="flex items-center justify-between gap-2 text-[15px]">
     <p class="flex items-center gap-2"><img src={icon('google')} width="16" height="16" alt="" />Google Reviews</p>
     <p class="flex items-center gap-1"><img src={icon('score')} width="12" height="11" alt="" /><span>5.0</span></p>
@@ -34,34 +35,39 @@ const actionClass = 'mt-4 flex min-h-14 items-center gap-2 rounded-xl px-4 py-2 
     </fieldset>
   </div>
 
-  <div data-five-star-content class="mt-5 grid" hidden>
-    <p class="flex items-center justify-center gap-2 rounded-[18px] border border-[#034812] px-2 py-2 text-center text-xs font-semibold uppercase">
+    <p data-rating-badge class="mt-5 flex items-center justify-center gap-2 rounded-[18px] border border-[#034812] px-2 py-2 text-center text-xs font-semibold uppercase" hidden>
       <img src={icon('excellent')} width="16" height="16" alt="" /><span data-rating-score>5.0 Excellent / Outstanding Experience</span>
     </p>
-    <div class="mt-6 grid gap-4">
-      
-      
-      <div class="flex flex-col justify-center items-center gap-6 px-4 py-6 bg-[#F6F6F6] rounded-[12px]">
-        <p data-review-text tabindex="-1" class=" text-[15px] leading-[1.5]"></p>
-        <div class="w-full bg-[#022B021A] h-[1px]"></div>
-        <div class="flex w-full items-center justify-between gap-3">
-          <p class="flex-1 text-[15px] leading-[1.5] max-w-40 font-medium">Copy our suggested review if you'd like.</p>
-          <button data-copy-review type="button" class="min-h-14 shrink-0 rounded-xl bg-[#a5d33d] px-6 font-semibold shadow-[var(--control-shadow)]">Copy text</button>
-        </div>
-      </div>
-      <p data-copy-status class="text-[15px] empty:hidden" role="status" aria-live="polite"></p>
-    </div>
-    <button data-review-pending type="button" class:list={[actionClass, 'w-full justify-center']} disabled>
-      <img src="/icons/shapehub/contact.svg" width="24" height="24" alt="" /><span>Review</span>
-    </button>
-    {googleReviewUrl ? <a data-google-review class={actionClass} href={googleReviewUrl} hidden>
-      <img src={icon('google-action')} width="33" height="33" alt="" /><span>Continue to Google Review</span><img class="ml-auto" src={icon('arrow')} alt="" />
-    </a> : <span data-google-review class={actionClass} role="link" aria-disabled="true" hidden>
-      <img src={icon('google-action')} width="33" height="33" alt="" /><span>Continue to Google Review</span><img class="ml-auto" src={icon('arrow')} alt="" />
-    </span>}
-  </div>
   <div data-feedback-widget class="mt-6" hidden><FormReview /></div>
 </article>
+  <div data-five-star-content class="grid gap-4" hidden>
+    <section data-review-suggestion class="grid gap-5 rounded-2xl bg-white px-4 py-6" aria-labelledby="review-suggestion-heading">
+      <div class="flex items-center gap-4">
+        <img src="/icons/shapehub/review-message.svg" width="40" height="40" alt="" class="shrink-0" />
+        <div class="min-w-0 border-l border-[#a5d33d] pl-4">
+          <h2 id="review-suggestion-heading" class="text-xl leading-[1.2] font-bold">Need a review suggestion?</h2>
+          <p class="mt-4 text-[15px] leading-[1.5]">Here’s a suggestion to copy if it fits your experience.</p>
+        </div>
+      </div>
+      <textarea data-review-text aria-label="Review suggestion" rows="3" class="min-h-[90px] w-full resize-none rounded-lg border border-[#c8ccd0] bg-white p-4 text-[15px] leading-[1.5] italic text-[#022b02] focus:border-[#a5d33d] focus:outline-2 focus:outline-offset-0 focus:outline-[#a5d33d]"></textarea>
+      <div class="grid grid-cols-2 gap-4">
+        <button data-regenerate-review type="button" class="flex h-12 min-w-0 items-center justify-center gap-2 rounded-xl border-2 border-[#a5d33d] bg-white px-2 text-[15px] font-semibold shadow-[var(--control-shadow)]">
+          <span class="flex size-6 shrink-0 items-center justify-center"><img src="/icons/shapehub/review-regenerate.svg" width="21.8262" height="16.6023" alt="" /></span><span>Regenerate</span>
+        </button>
+        <button data-copy-review type="button" class="flex h-12 min-w-0 items-center justify-center gap-2 rounded-xl bg-[#a5d33d] px-2 text-[15px] font-semibold shadow-[var(--control-shadow)]">
+          <img src="/icons/shapehub/review-copy.svg" width="20" height="20" alt="" class="shrink-0" /><span>Copy text</span>
+        </button>
+      </div>
+      <p data-copy-status class="text-[15px] empty:hidden" role="status" aria-live="polite"></p>
+      <p class="text-center text-[15px] leading-[1.5]">*Review and edit before posting.</p>
+    </section>
+    {googleReviewUrl ? <a data-google-review class={actionClass} href={googleReviewUrl}>
+      <img src={icon('google-action')} width="33" height="33" alt="" /><span>Continue to Google Review</span>
+    </a> : <span data-google-review class={actionClass} role="link" aria-disabled="true">
+      <img src={icon('google-action')} width="33" height="33" alt="" /><span>Continue to Google Review</span>
+    </span>}
+  </div>
+</div>
 <ReviewInteractions />
 
 <style>
